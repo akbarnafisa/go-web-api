@@ -9,8 +9,9 @@ import (
 func main() {
 	r := gin.Default()
 	r.GET("/ping", rootHander)
-	r.GET("books/:author/:id", bookHandler)
-	r.GET("query", queryHandler)
+	r.GET("/books/:author/:id", bookHandler)
+	r.GET("/query", queryHandler)
+	r.POST("/input", postBookHandler)
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
@@ -38,5 +39,27 @@ func queryHandler(c *gin.Context) {
 		"title":      title,
 		"titleArray": titleArray,
 		"author":     author,
+	})
+}
+
+type BookInput struct {
+	Title    string
+	Price    int
+	SubTitle string `json:"sub_title"`
+}
+
+func postBookHandler(c *gin.Context) {
+	var bookInput BookInput
+	err := c.ShouldBindJSON(&bookInput)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":    "Books added",
+		"title":     bookInput.Title,
+		"price":     bookInput.Price,
+		"sub_title": bookInput.SubTitle,
 	})
 }
