@@ -27,9 +27,7 @@ func main() {
 
 	r := gin.Default()
 	v1 := r.Group("/v1")
-	v1.GET("/ping", bookHandler.RootHander)
-	v1.GET("/books/:author/:id", bookHandler.BookHandler)
-	v1.GET("/query", bookHandler.QueryHandler)
+	v1.GET("/books", bookHandler.GetBooks)
 	v1.POST("/input", bookHandler.PostBookHandler)
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 

@@ -15,30 +15,16 @@ func NewBookHandler(bookService book.Service) *bookHandler {
 	return &bookHandler{bookService}
 }
 
-func (h *bookHandler) RootHander(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "pongss",
-	})
-}
+func (h *bookHandler) GetBooks(c *gin.Context) {
+	book, err := h.bookService.FindAll()
 
-func (h *bookHandler) BookHandler(c *gin.Context) {
-	id := c.Param("id")
-	author := c.Param("author")
-	c.JSON(http.StatusOK, gin.H{
-		"id":     id,
-		"author": author,
-	})
-}
-
-func (h *bookHandler) QueryHandler(c *gin.Context) {
-	title := c.Query("title")
-	titleArray := c.QueryArray("title")
-	author := c.Query("author")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"title":      title,
-		"titleArray": titleArray,
-		"author":     author,
+		"data": book,
 	})
 }
 
