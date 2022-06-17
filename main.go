@@ -22,21 +22,21 @@ func main() {
 	db.AutoMigrate(&book.Book{})
 
 	bookRepository := book.NewRepository(db)
-
 	bookService := book.NewService(bookRepository)
-
-	inputBook := book.BookRequest{
-		Title: "Gundam",
-		Price: "20000",
-	}
-
-	bookService.Create(inputBook)
+	bookHandler := handler.NewBookHandler((bookService))
 
 	r := gin.Default()
 	v1 := r.Group("/v1")
-	v1.GET("/ping", handler.RootHander)
-	v1.GET("/books/:author/:id", handler.BookHandler)
-	v1.GET("/query", handler.QueryHandler)
-	v1.POST("/input", handler.PostBookHandler)
+	v1.GET("/ping", bookHandler.RootHander)
+	v1.GET("/books/:author/:id", bookHandler.BookHandler)
+	v1.GET("/query", bookHandler.QueryHandler)
+	v1.POST("/input", bookHandler.PostBookHandler)
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+
+	// main
+	// handler
+	// service
+	// repository
+	// db
+	// mysql
 }
