@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"go-web-api/book"
 	"go-web-api/handler"
 	"log"
@@ -14,13 +13,24 @@ import (
 
 func main() {
 	dsn := "root:@tcp(127.0.0.1:3306)/go-web-api?charset=utf8mb4&parseTime=True&loc=Local"
-	_, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal("DB connectionn error!")
 	}
 
-	fmt.Println("Success Connect to DB")
+	db.AutoMigrate(&book.Book{})
+
+	bookRepository := book.NewRepository(db)
+
+	inputBook := book.Book{
+		Title:       "Title",
+		Description: "1234",
+		Price:       1000,
+		Rating:      5,
+	}
+
+	bookRepository.Create(inputBook)
 
 	r := gin.Default()
 	v1 := r.Group("/v1")
