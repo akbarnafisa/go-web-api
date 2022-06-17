@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"go-web-api/book"
 	"go-web-api/handler"
 	"log"
@@ -21,6 +22,8 @@ func main() {
 
 	db.AutoMigrate(&book.Book{})
 
+	fmt.Println("hmmm")
+
 	bookRepository := book.NewRepository(db)
 	bookService := book.NewService(bookRepository)
 	bookHandler := handler.NewBookHandler((bookService))
@@ -31,6 +34,8 @@ func main() {
 	v1.GET("/books/:id", bookHandler.GetBook)
 	v1.PUT("/books/:id", bookHandler.UpdateBookHandler)
 	v1.POST("/books", bookHandler.PostBookHandler)
+	v1.DELETE("/books/:id", bookHandler.Delete)
+
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 
 	// main
