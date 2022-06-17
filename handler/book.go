@@ -72,6 +72,28 @@ func (h *bookHandler) PostBookHandler(c *gin.Context) {
 	})
 }
 
+func (h *bookHandler) UpdateBookHandler(c *gin.Context) {
+	var bookInput book.BookRequest
+
+	err := c.ShouldBindJSON(&bookInput)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+	book, err := h.bookService.Update(id, bookInput)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": book,
+	})
+}
+
 func convertToBookResponse(b book.Book) book.BookResponse {
 	return book.BookResponse{
 		ID:          b.ID,
