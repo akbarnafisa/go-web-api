@@ -2,11 +2,11 @@ package book
 
 import "gorm.io/gorm"
 
-// type Repository interface {
-// 	FindAll() ([]Book, error)
-// 	FindById(ID int) (Book, error)
-// 	Create(book Book) (Book, error)
-// }
+type Repository interface {
+	FindAll() ([]Book, error)
+	FindById(ID int) (Book, error)
+	Create(book Book) (Book, error)
+}
 
 type repository struct {
 	db *gorm.DB

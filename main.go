@@ -23,20 +23,20 @@ func main() {
 
 	bookRepository := book.NewRepository(db)
 
-	inputBook := book.Book{
-		Title:       "Title",
-		Description: "1234",
-		Price:       1000,
-		Rating:      5,
+	bookService := book.NewService(bookRepository)
+
+	inputBook := book.BookRequest{
+		Title: "Gundam",
+		Price: "20000",
 	}
 
-	bookRepository.Create(inputBook)
+	bookService.Create(inputBook)
 
 	r := gin.Default()
 	v1 := r.Group("/v1")
 	v1.GET("/ping", handler.RootHander)
 	v1.GET("/books/:author/:id", handler.BookHandler)
 	v1.GET("/query", handler.QueryHandler)
-	v1.POST("/input", book.PostBookHandler)
+	v1.POST("/input", handler.PostBookHandler)
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
